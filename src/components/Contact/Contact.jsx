@@ -1,11 +1,11 @@
 import css from "./Contact.module.css";
-import { deleteContact } from "../../redux/contactsOps";
+import { apiDeleteContact } from "../../redux/contacts/operations";
 import { useDispatch } from "react-redux";
 
 const Contact = ({ id, name, number }) => {
   const dispatch = useDispatch();
   const onDelete = (contactId) => {
-    dispatch(deleteContact(contactId));
+    dispatch(apiDeleteContact(contactId));
   };
   return (
     <div className={css.userBox}>
@@ -13,7 +13,7 @@ const Contact = ({ id, name, number }) => {
         <li>{name}</li>
         <li>{number}</li>
       </ul>
-      <button onClick={() => onDelete(id)} type="button">
+      <button className={css.deleteBtn} onClick={() => onDelete(id)} type="button">
         Delete
       </button>
     </div>

@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addContact, fetchContacts, deleteContact } from "./contactsOps.js";
+import {
+  apiAddContact,
+  apiGetContacts,
+  apiDeleteContact,
+} from "./operations.js";
+import { logout } from "../auth/operations.js";
 
 const initialState = {
   contacts: {
@@ -15,43 +20,54 @@ const contactsSlice = createSlice({
   extraReducers: (builder) =>
     builder
       // GET Contacts
-      .addCase(fetchContacts.pending, (state) => {
+      .addCase(apiGetContacts.pending, (state) => {
         state.loading = true;
         state.error = false;
       })
-      .addCase(fetchContacts.fulfilled, (state, action) => {
+      .addCase(apiGetContacts.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload;
       })
-      .addCase(fetchContacts.rejected, (state) => {
+      .addCase(apiGetContacts.rejected, (state) => {
         state.loading = false;
         state.error = true;
       })
       // ADD  Contact
-      .addCase(addContact.pending, (state) => {
+      .addCase(apiAddContact.pending, (state) => {
         state.loading = true;
         state.error = false;
       })
-      .addCase(addContact.fulfilled, (state, action) => {
+      .addCase(apiAddContact.fulfilled, (state, action) => {
         state.loading = false;
-        state.items.push(action.payload);
+        state.items = [...state.items, action.payload];
       })
-      .addCase(addContact.rejected, (state) => {
+      .addCase(apiAddContact.rejected, (state) => {
         state.loading = false;
         state.error = true;
       })
       // DELETE Contact
-      .addCase(deleteContact.pending, (state) => {
+      .addCase(apiDeleteContact.pending, (state) => {
         state.loading = true;
         state.error = false;
       })
-      .addCase(deleteContact.fulfilled, (state, action) => {
+      .addCase(apiDeleteContact.fulfilled, (state, action) => {
         state.loading = false;
         state.items = state.items.filter(
           (item) => item.id !== action.payload.id
         );
       })
-      .addCase(deleteContact.rejected, (state) => {
+      .addCase(apiDeleteContact.rejected, (state) => {
+        state.loading = false;
+        state.error = true;
+      })
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.items = [];
+      })
+      .addCase(logout.rejected, (state) => {
         state.loading = false;
         state.error = true;
       }),
